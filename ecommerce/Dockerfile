@@ -1,30 +1,25 @@
-# Step 1: Use OpenJDK as base image
-FROM openjdk:17-jdk-slim as builder
+# Use official OpenJDK as base image
+FROM openjdk:17-jdk-slim
 
-# Step 2: Set working directory
+# Set working directory inside the container
 WORKDIR /app
 
-# Step 3: Copy Maven wrapper and pom.xml
+# Copy Maven wrapper & pom.xml first (for dependency caching)
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 
-# Step 4: Download dependencies
+# Download dependencies (this makes future builds faster)
 RUN ./mvnw dependency:go-offline
 
-# Step 5: Copy source code and build the app
+# Copy the source code
 COPY src src
+
+# Build the application
 RUN ./mvnw clean package -DskipTests
 
-# Step 6: Run stage (lightweight image)
-FROM openjdk:17-jdk-slim
-WORKDIR / eEcommerceApplication
-
-# Copy JAR file from builder stage
-COPY --from=builder /app/target/*.jar eEcommerceApplication.jar
-
-# Expose port
+# Expose port 8080 for Spring Boot
 EXPOSE 8080
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "eEcommerceApplication.jar"]
+# Run the app
+CMD ["java", "-jar", "target/ecommerce-0.0.1-SNAPSHOT.jar"]
