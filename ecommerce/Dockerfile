@@ -21,10 +21,10 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy JAR file from builder stage
-COPY --from=builder /app/target/*.jar app.jar
+COPY --from=builder /app/target/*.jar eEcommerceApplication.jar
 
 # Expose port
 EXPOSE 8080
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "eEcommerceApplication.jar"]
