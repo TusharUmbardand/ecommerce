@@ -18,7 +18,7 @@ RUN ./mvnw clean package -DskipTests
 
 # Step 6: Run stage (lightweight image)
 FROM openjdk:17-jdk-slim
-WORKDIR /app
+WORKDIR / eEcommerceApplication
 
 # Copy JAR file from builder stage
 COPY --from=builder /app/target/*.jar eEcommerceApplication.jar
